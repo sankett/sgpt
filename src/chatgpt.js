@@ -70,7 +70,7 @@ class ChatGPT extends LitElement {
         return await fetch(url, {
             method: 'POST',
             headers: {
-              "Authorization": 'Bearer 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',
+              "Authorization": 'Bearer ' + this.apikey,
               'Content-Type': 'application/json'
             },
             body: JSON.stringify(payload)
