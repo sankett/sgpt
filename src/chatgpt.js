@@ -231,7 +231,7 @@ class ChatGPT extends LitElement {
       return html` 
         <div class="sgptContainer darkTheme">
             <div class="sgptHeader">
-              <span class="headerLeft">Chat with GPT-3</span>
+              <span class="headerLeft">ChatGPT</span>
               <span class="headerMiddle"><button class="customButton darkTheme" id="sgptButton" @click=${this.onSetting}>Settings</button></span>
               <span class="headerRight">
               <img src="https://storybook7.blob.core.windows.net/images/sanketterdal.png" alt="Sanket" width="120" height="32"/>&nbsp;
@@ -242,8 +242,8 @@ class ChatGPT extends LitElement {
               @input=${this.changeKey}
               value=${this.apikey} />
 
-              <button class="sgptButtonSetting darkTheme"  @click=${this.onSave}>Save</button>
-              <button class="sgptButtonSetting darkTheme"  @click=${this.onCancel}>Cancel</button>
+              <button class="customActionButton darkTheme"  @click=${this.onSave}>Save</button>
+              <button class="customActionButton darkTheme"  @click=${this.onCancel}>Cancel</button>
            </div>
            <div class="sgptResult ${this.showSettings ? 'hideSettings': 'showSettings'}" id="sgptResult">
               ${this.chatList.map((item) => html`<span class="${item.role === 'user' ? 'userspan' : 'assistspan darkresult' }">${item.content.trim()}</span>`)}
@@ -259,7 +259,7 @@ class ChatGPT extends LitElement {
                 <button class="sgptButton darkTheme" id="sgptButton" 
                 @click=${this.onSend}
                 name="sgptButton">Send</button><br>
-                <button class="sgptButton darkTheme" id="sgptButton" @click=${this.onClear}>Clear</button><br>
+                <button class="sgptButton sgptButtonMargin darkTheme" id="sgptButton" @click=${this.onClear}>Clear</button><br>
                 
            </div>
         </div>

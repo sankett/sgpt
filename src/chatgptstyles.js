@@ -13,7 +13,7 @@ export const chatgptStyles = css`
 .sgptHeader {
     height: 32px;
     width: 100%;
-    
+    border-top: 1px solid gray;
     border-bottom: 1px solid gray;
 }
 
@@ -24,7 +24,8 @@ export const chatgptStyles = css`
     padding-left: 1%;
     padding-top: 8px;
     font-size: 16px;
-    
+    color:yellow;
+    font-weight:bold;
 }
 
 .headerMiddle {
@@ -46,7 +47,7 @@ export const chatgptStyles = css`
     float: left;    
     border-radius: 2px;             
     height: 99.5vh;   
-    border: 1px solid gray;
+    border: 0px solid gray;
     line-height: 1.0em;
     margin-left: 0%;
     margin-right: 0%;
@@ -118,14 +119,30 @@ export const chatgptStyles = css`
 
 .customButton {
     float: left;
-    width: 100px;
+    width: 70px;
+    height: 27px;
+    border-radius: 5px;   
+    border: 1px solid gray;
+    cursor: pointer;
+    margin-top: 0px;
+    color:lightgreen;
+    font-size:13px;
+}
+
+.customActionButton {
+    float: left;
+    width: 60px;
     height: 30px;
     border-radius: 5px;   
     border: 1px solid gray;
     cursor: pointer;
     margin-top: 0px;
-    color:blue;
+    color:lightgreen;
+    margin-top:10px;
+    margin-left:2px;
+    font-size:13px;
 }
+
 .sgptButton {   
     float: left;
     width: 15%;
@@ -133,8 +150,12 @@ export const chatgptStyles = css`
     border-radius: 5px;   
     border: 1px solid gray;
     cursor: pointer;
-    margin-top: 2px;
     
+    
+}
+
+.sgptButtonMargin {  
+    margin-top: 1%;
 }
 
 .darkresult {
