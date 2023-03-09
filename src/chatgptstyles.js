@@ -18,7 +18,7 @@ export const chatgptStyles = css`
 }
 
 .headerLeft{
-    width:50%;
+    width:45%;
     float: left;
     text-align: left;
     padding-left: 1%;
@@ -27,8 +27,13 @@ export const chatgptStyles = css`
     
 }
 
+.headerMiddle {
+    float:left;
+    width:10%;
+    margin-top: 1px;
+}
 .headerRight{
-    width:49%;
+    width:44%;
     float: left;
     text-align: right;
     padding-top: 8px;
@@ -37,14 +42,14 @@ export const chatgptStyles = css`
 }
 
 .sgptContainer {
-    width: 98%;    
+    width: 99.8%;    
     float: left;    
     border-radius: 2px;             
     height: 99.5vh;   
     border: 1px solid gray;
     line-height: 1.0em;
-    margin-left: 1%;
-    margin-right: 1%;
+    margin-left: 0%;
+    margin-right: 0%;
 }
 
 .sgptSettings{
@@ -80,16 +85,19 @@ export const chatgptStyles = css`
 }
 
 .sgptResult{
-    height: 100%;
+    height: 74%;
     width: 100%;        
     border-radius: 5px;     
     border:0px solid gray;
-    max-height: 520px;    
+    /*max-height: 520px;*/    
     white-space:pre-wrap;  
     overflow-y: auto;
     clear: both;
 }
 
+.sgptCommand {
+   
+}
 .showSettings{
     display: block;
 }
@@ -100,7 +108,7 @@ export const chatgptStyles = css`
 .sgptTextPrompt {
     float: left;
     width:78%;     
-    height: 100px;
+    height: 90px;
     letter-spacing: normal;
     word-spacing: normal;    
     border-radius: 5px;      
@@ -116,6 +124,7 @@ export const chatgptStyles = css`
     border: 1px solid gray;
     cursor: pointer;
     margin-top: 2px;
+    
 }
 
 .darkresult {
@@ -154,9 +163,7 @@ export const chatgptStyles = css`
     vertical-align: top;
 }
 
-.sgptCommand {
 
-}
 
 .overlay {
     background: rgba(0,0,0,0.5);

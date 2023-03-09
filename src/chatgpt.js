@@ -232,6 +232,7 @@ class ChatGPT extends LitElement {
         <div class="sgptContainer darkTheme">
             <div class="sgptHeader">
               <span class="headerLeft">Chat with GPT-3</span>
+              <span class="headerMiddle"><button class="sgptButton darkTheme" id="sgptButton" @click=${this.onSetting}>Settings</button></span>
               <span class="headerRight">
               <img src="https://storybook7.blob.core.windows.net/images/sanketterdal.png" alt="Sanket" width="120" height="32"/>&nbsp;
               </span>
@@ -259,7 +260,7 @@ class ChatGPT extends LitElement {
                 @click=${this.onSend}
                 name="sgptButton">Send</button><br>
                 <button class="sgptButton darkTheme" id="sgptButton" @click=${this.onClear}>Clear</button><br>
-                <button class="sgptButton darkTheme" id="sgptButton" @click=${this.onSetting}>Settings</button>
+                
            </div>
         </div>
       `;
