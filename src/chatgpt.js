@@ -27,6 +27,7 @@ class ChatGPT extends LitElement {
         apikey: { type: String },
         openai: { type: Object },
         showSettings: { type: Boolean },
+        errorMessage: { type: String }
     };
 
     static styles = [chatgptStyles];
@@ -41,6 +42,7 @@ class ChatGPT extends LitElement {
         this.timeInterval = null;
         this.loading = false;
         this.apikey = localStorage.getItem('openai-apikey');
+        this.errorMessage = "";
         
         if(this.apikey === null || this.apikey === undefined || this.apikey === ''){
           this.showSettings = true;
@@ -64,6 +66,7 @@ class ChatGPT extends LitElement {
     changePrompt(event) {    
       this.responseData = '' ;  
         this.prompt = event.target.value;
+        this.errorMessage = event.target.value.length + " characters.";
     }
 
     async fetchData(url,payload) {
@@ -160,14 +163,15 @@ class ChatGPT extends LitElement {
 
     async onSend(event)   {        
         this.responseData = "";
+        this.errorMessage = "";
         const text =this.prompt;
         if(text === "" || text === null || text === undefined){
-          this.responseData = "Please enter a prompt."
+          this.errorMessage = "Please enter a prompt."
           return;
         }
 
         if(text.length < 15){
-          this.responseData = "Please enter a valid and meaningful prompt with minimum sentence length of 15."
+          this.errorMessage = "Please enter a valid and meaningful prompt with minimum sentence length of 15."
           return;
         }
         this.loading = true;
@@ -188,6 +192,7 @@ class ChatGPT extends LitElement {
         this.responseData = '';
         this.input.value = '';
         this.prompt = "";
+        this.errorMessage = "";
         this.requestUpdate();
     }
 
@@ -247,7 +252,6 @@ class ChatGPT extends LitElement {
            </div>
            <div class="sgptResult ${this.showSettings ? 'hideSettings': 'showSettings'}" id="sgptResult">
               ${this.chatList.map((item) => html`<span class="${item.role === 'user' ? 'userspan' : 'assistspan darkresult' }">${item.content.trim()}</span>`)}
-              
               <span class="responsespan darkresult">${this.responseData}</span>
              
            </div>
@@ -262,6 +266,7 @@ class ChatGPT extends LitElement {
                 <button class="sgptButton sgptButtonMargin darkTheme" id="sgptButton" @click=${this.onClear}>Clear</button><br>
                 
            </div>
+           <span class="errorMessage">${this.errorMessage}</span>
         </div>
       `;
     }

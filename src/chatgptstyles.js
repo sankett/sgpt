@@ -143,14 +143,21 @@ export const chatgptStyles = css`
     font-size:13px;
 }
 
+.errorMessage {
+    color:orange;
+    width:97%;
+    float: left;
+    text-align:left;
+    margin-left:5px;
+    font-size:12px;
+}
 .sgptButton {   
     float: left;
     width: 15%;
     height: 30px;
     border-radius: 5px;   
     border: 1px solid gray;
-    cursor: pointer;
-    
+    cursor: pointer;   
     
 }
 
@@ -169,7 +176,7 @@ export const chatgptStyles = css`
     padding-left: 1%;
     padding-right: 1%;
     padding-top: 10px;
-    
+    font-size:16px;
 }
 
 .assistspan{
@@ -180,6 +187,7 @@ export const chatgptStyles = css`
     padding-left: 1%;
     padding-right: 1%;
     border-bottom: 1px dotted white;
+    
 }
 
 .responsespan{
