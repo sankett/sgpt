@@ -144,7 +144,7 @@ class ChatGPT extends LitElement {
                 this.chatList.push({"role": "assistant", "content": content});
                 this.loading = false;
                 this.input.value = '';
-                this.input.focus();
+                //this.input.focus();
                 this.prompt = "";
                 this.scrollToBottom();           
                 
@@ -232,7 +232,7 @@ class ChatGPT extends LitElement {
         <div class="sgptContainer darkTheme">
             <div class="sgptHeader">
               <span class="headerLeft">Chat with GPT-3</span>
-              <span class="headerMiddle"><button class="sgptButton darkTheme" id="sgptButton" @click=${this.onSetting}>Settings</button></span>
+              <span class="headerMiddle"><button class="customButton darkTheme" id="sgptButton" @click=${this.onSetting}>Settings</button></span>
               <span class="headerRight">
               <img src="https://storybook7.blob.core.windows.net/images/sanketterdal.png" alt="Sanket" width="120" height="32"/>&nbsp;
               </span>

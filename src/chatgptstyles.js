@@ -18,7 +18,7 @@ export const chatgptStyles = css`
 }
 
 .headerLeft{
-    width:45%;
+    width:40%;
     float: left;
     text-align: left;
     padding-left: 1%;
@@ -29,7 +29,7 @@ export const chatgptStyles = css`
 
 .headerMiddle {
     float:left;
-    width:10%;
+    width:15%;
     margin-top: 1px;
 }
 .headerRight{
@@ -116,9 +116,19 @@ export const chatgptStyles = css`
     margin: 2px;
 }
 
+.customButton {
+    float: left;
+    width: 100px;
+    height: 30px;
+    border-radius: 5px;   
+    border: 1px solid gray;
+    cursor: pointer;
+    margin-top: 0px;
+    color:blue;
+}
 .sgptButton {   
     float: left;
-    width: 19%;
+    width: 15%;
     height: 30px;
     border-radius: 5px;   
     border: 1px solid gray;
