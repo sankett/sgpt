@@ -220,6 +220,7 @@ tr {
     padding-right: 1%;
     padding-top: 10px;
     font-size:14px;
+    white-space: normal;
 }
 
 .assistspan{
