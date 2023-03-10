@@ -2,9 +2,52 @@ import { css } from 'lit-element';
 
 export const chatgptStyles = css`
 
+pre {
+    padding: 5px;
+    background-color: rgb(1 39 39);
+    color: lightgreen;
+}
+table {
+    border-collapse: collapse; 
+    border-color: #011616;
+    text-indent: 0;
+    background-color: rgb(1 39 39);
+    color: lightgreen;
+    width: 100%;
+}
+
+tbody {
+    display: table-row-group;
+    vertical-align: middle;
+    border-color: inherit;
+}
+ th {
+    background-color: rgb(1 39 39);
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    border-top-width: 1px;
+    padding: 0.25rem 0.75rem;
+    border-color: #011616;
+    text-align: left;
+    border: 1px solid #011616;
+}
+
+ td {
+    border-bottom-width: 1px;
+    border-left-width: 1px;
+    padding: 0.25rem 0.75rem;
+    text-align: left;
+    border: 1px solid #011616;
+}
+
+tr {
+    display: table-row;
+    vertical-align: inherit;
+    border-color: inherit;
+}
 
 .darkTheme {
-    background-color: black;
+    background-color: #011616;
     color: white;    
     font-family: 'Roboto', sans-serif; 
     font-size: 14px;
@@ -90,8 +133,8 @@ export const chatgptStyles = css`
     width: 100%;        
     border-radius: 5px;     
     border:0px solid gray;
-    /*max-height: 520px;*/    
-    white-space:pre-wrap;  
+    /*max-height: 520px;    
+    white-space: pre-wrap;  */
     overflow-y: auto;
     clear: both;
 }
@@ -176,14 +219,15 @@ export const chatgptStyles = css`
     padding-left: 1%;
     padding-right: 1%;
     padding-top: 10px;
-    font-size:16px;
+    font-size:14px;
 }
 
 .assistspan{
     float: left;
     width: 98%;
     text-align: left;
-    padding-bottom: 1%;
+    font-size:14px;
+    white-space: normal;
     padding-left: 1%;
     padding-right: 1%;
     border-bottom: 1px dotted white;
@@ -200,6 +244,7 @@ export const chatgptStyles = css`
     margin-top: -5px;
     padding-top: 0px;
     vertical-align: top;
+    white-space:pre-wrap;  
 }
 
 

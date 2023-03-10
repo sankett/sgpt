@@ -1,15 +1,17 @@
 import { LitElement, html } from 'lit-element';
 import { Configuration, OpenAIApi } from 'openai';
 import { chatgptStyles } from './chatgptstyles.js';
+import {marked} from 'marked';
+import hljs from 'highlight.js';
+//import { unsafeHTML } from 'lit-html/development/directives/unsafe-html';
+import { unsafeHTML } from 'https://jspm.dev/lit-html/directives/unsafe-html.js';
+//import "highlight.js/styles/github.css";
 
-/*const openaikey = localStorage.getItem('openai-apikey');
-const configuration = new Configuration({
-  apiKey: openaikey,
-});
-
-const openai = new OpenAIApi(configuration);*/
+//const langRegex = /^lang-(\w+)/;
 
 class ChatGPT extends LitElement { 
+
+  
 
     static properties = {
         prompt: {},
@@ -144,6 +146,7 @@ class ChatGPT extends LitElement {
                   index++
               } else {
                 this.responseData = '';
+               
                 this.chatList.push({"role": "assistant", "content": content});
                 this.loading = false;
                 this.input.value = '';
@@ -230,9 +233,33 @@ class ChatGPT extends LitElement {
         this.apikey = event.target.value;
     }
 
+   formatcode(content){
+    const regex = /```(.|\n)*?```/g;
+    content = content.replace(regex, match => {
+      const code = match.replace(/```/g, '');
+      return `<code class="language-javascript">${code}</code>`;
+    });
+    return content;
+   }
 
+   renderMarkdown(content) {
+    marked.setOptions({
+      highlight: function (code, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+          return hljs.highlight(lang, code).value;
+        } else {
+          return hljs.highlightAuto(code).value;
+        }
+      },
+    });
+  
+    return html`${unsafeHTML(marked(content))}`;
+  }
 
     render() {
+      
+      
+
       return html` 
         <div class="sgptContainer darkTheme">
             <div class="sgptHeader">
@@ -243,6 +270,7 @@ class ChatGPT extends LitElement {
               </span>
             </div>
            <div class="sgptSetting ${this.showSettings ? 'showSettings': 'hideSettings'}">
+           
               <input type="text" class="sgptKeyText darkTheme" id="apikey" placeholder="Enter API Key" 
               @input=${this.changeKey}
               value=${this.apikey} />
@@ -251,7 +279,9 @@ class ChatGPT extends LitElement {
               <button class="customActionButton darkTheme"  @click=${this.onCancel}>Cancel</button>
            </div>
            <div class="sgptResult ${this.showSettings ? 'hideSettings': 'showSettings'}" id="sgptResult">
-              ${this.chatList.map((item) => html`<span class="${item.role === 'user' ? 'userspan' : 'assistspan darkresult' }">${item.content.trim()}</span>`)}
+              ${this.chatList.map((item) => html`<span class="${item.role === 'user' ? 'userspan' : 'assistspan darkresult' }">
+              ${item.role === 'user' ?  item.content :this.renderMarkdown(item.content)}</span>`)}
+               
               <span class="responsespan darkresult">${this.responseData}</span>
              
            </div>
@@ -270,6 +300,8 @@ class ChatGPT extends LitElement {
         </div>
       `;
     }
+
+   
   }
   
   customElements.define('sanket-chatgpt', ChatGPT);
