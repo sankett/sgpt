@@ -3,11 +3,10 @@ import { Configuration, OpenAIApi } from 'openai';
 import { chatgptStyles } from './chatgptstyles.js';
 import {marked} from 'marked';
 import hljs from 'highlight.js';
+import {unsafeHTML} from './unsafe-html.js';
 //import { unsafeHTML } from 'lit-html/development/directives/unsafe-html';
-import { unsafeHTML } from 'https://jspm.dev/lit-html/directives/unsafe-html.js';
-//import "highlight.js/styles/github.css";
+//import { unsafeHTML } from 'https://jspm.dev/lit-html/directives/unsafe-html.js';
 
-//const langRegex = /^lang-(\w+)/;
 
 class ChatGPT extends LitElement { 
 
