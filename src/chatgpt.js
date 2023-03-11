@@ -102,8 +102,18 @@ class ChatGPT extends LitElement {
       }  
       var result = await  this.fetchData('https://api.openai.com/v1/moderations',payload);
       var data = await result.json();
-      var flagged = data.results[0].flagged;
-      return flagged;
+      
+      var result = { message: "", code: -1};
+      if(data.error === undefined){
+        result.code = 0
+      }
+      else{
+        result.code = 1;
+        result.message = data.error.message ? data.error.message : "Something went wrong. Please try again";
+
+      }
+      return result;
+      
     }
 
     loader() {
@@ -137,52 +147,36 @@ class ChatGPT extends LitElement {
       xhr.onreadystatechange = function () {
         
         if (xhr.readyState == 3) {
-          
-          var newData = xhr.response.substr(xhr.seenBytes);
-          
-          const arr = newData.split("\n\n");
-          
-          arr.pop();
-            arr.forEach((data) => {
-              
-              if (data.indexOf("[DONE]") === -1) { 
-                const currentData = data.trim().replace("data:","");  
-                if(currentData !== ""){          
-                  const delta = JSON.parse(currentData).choices[0].delta;
-                  content += delta.content ? delta.content : ""; 
-                  //self.responseData = content
-                  self.responseItem.innerHTML = marked(content);
-                  self.scrollToBottom();
-                  //self.responseItem.innerHTML += delta.content ? marked(delta.content) : ""; 
-                  //setTimeout(() => {
-                    //self.responseItem.innerHTML += delta.content ? marked(delta.content) : ""; 
-                    //self.responseItem.innerHTML = marked(content); 
-                    //self.responseData = content
-                  //}, 100)
-                  
-                  
-                }
-                
-              }
-
-                           
-              
-            })
-          xhr.seenBytes = xhr.responseText.length;
-          
+          try {
+            var newData = xhr.response.substr(xhr.seenBytes);          
+            const arr = newData.split("\n\n");          
+            arr.pop();
+              arr.forEach((data) => {              
+                if (data.indexOf("[DONE]") === -1) { 
+                  const currentData = data.trim().replace("data:","");  
+                  if(currentData !== ""){          
+                    const delta = JSON.parse(currentData).choices[0].delta;
+                    content += delta.content ? delta.content : "";                     
+                    self.responseItem.innerHTML = marked(content);
+                    self.scrollToBottom();
+                  }                
+                }                                        
+              })
+            xhr.seenBytes = xhr.responseText.length;
+          }catch (err) {
+            
+              this.errorMessage = "Something went wrong. Please try again.<br>Reason: " + err.message;
+              this.loading = false;
+          }
         }
 
-        if (xhr.readyState == 4 && xhr.status === 200) {
-          //console.log("done2")
-            //self.responseData = "";
-            //self.requestUpdate()
+        if (xhr.readyState == 4 && xhr.status === 200) {   
+            self.scrollToBottom();      
             self.responseItem.innerHTML = " ";           
             self.chatList.push({"role": "assistant", "content": content});
             self.loading = false;            
             self.input.value = ""
-            self.scrollToBottom();
-          
-          
+            
         }
       }
 
@@ -285,12 +279,15 @@ class ChatGPT extends LitElement {
         this.requestUpdate();
        
         const result =  await this.moderation();
-        if(!result){
-            //this.responseData = "Hold on, we're waiting for the server to respond. This shouldn't take too long.....";
-            //this.loader()        
+        
+        if(result.code === 0){                 
             this.completion() 
                     
-        }        
+        }      
+        else{
+          this.responseItem.innerHTML = result.message;          
+          this.loading = false;
+        }  
     }
 
     onClear(event) {
@@ -453,15 +450,20 @@ class ChatGPT extends LitElement {
               <img src="https://storybook7.blob.core.windows.net/images/sanketterdal.png" alt="Sanket" width="120" height="32"/>&nbsp;
               </span>
             </div>
-           <div class="sgptSetting ${this.showSettings ? 'showSettings': 'hideSettings'}">
+           <div class="sgptSettings ${this.showSettings ? 'showSettings': 'hideSettings'}">
            
               <input type="text" class="sgptKeyText darkTheme" id="apikey" placeholder="Enter API Key" 
               @input=${this.changeKey}
               value=${this.apikey} />
 
               <button class="customActionButton darkTheme"  @click=${this.onSave}>Save</button>
-              <button class="customActionButton darkTheme"  @click=${this.onCancel}>Cancel</button>
+              <button class="customActionButton darkTheme"  @click=${this.onCancel}>Cancel</button><br>
+             
            </div>
+           <div class="sgptSettings ${this.showSettings ? 'showSettings': 'hideSettings'}">
+           <a href="https://platform.openai.com/account/api-keys"  class="sgptLink"            
+           target="_blank">Get OpenAI Key</a>
+          </div>
            <div class="sgptResult ${this.showSettings ? 'hideSettings': 'showSettings'}" id="sgptResult">
               ${this.chatList.map((item) => html`<span class="${item.role === 'user' ? 'userspan' : 'assistspan darkresult' }">
               ${this.renderMarkdown(item.content)}</span>`)}

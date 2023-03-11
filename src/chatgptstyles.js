@@ -13,7 +13,7 @@ table {
     text-indent: 0;
     background-color: rgb(1 39 39);
     color: lightgreen;
-    width: 100%;
+    width: 90%;
 }
 
 tbody {
@@ -130,10 +130,10 @@ tr {
 }
 
 .sgptSettings{
-    height: 100%;
-    width: 100%;        
+    height: 50px;
+    width: 95%;        
     border-radius: 5px;     
-    border:1px solid blue;
+    border:0px solid blue;
     max-height: 220px;        
     clear: both;
     
@@ -256,7 +256,13 @@ tr {
 .sgptButtonMargin {  
     margin-left: 1%;
 }
-
+.sgptLink {
+    margin-left:1%;
+    width:90%;
+    border:0px solid blue;
+    text-align: left;
+    color:yellow;
+}
 .darkresult {
     color:yellow;
 }
