@@ -13,7 +13,7 @@ table {
     text-indent: 0;
     background-color: rgb(1 39 39);
     color: lightgreen;
-    width: 90%;
+    width: 98%;
 }
 
 tbody {
