@@ -264,10 +264,10 @@ tr {
     float: left;
     width: 98%;
     text-align: left;
-    padding-bottom: 10px;
+    /*padding-bottom: 10px;*/
     padding-left: 1%;
     padding-right: 1%;
-    padding-top: 10px;
+    /*padding-top: 10px;*/
     font-size:14px;
     white-space: normal;
 }
@@ -285,7 +285,7 @@ tr {
 }
 
 .responsespan{
-    float: left;
+    /*float: left;
     width: 98%;
     text-align: left;
     padding-bottom: 3%;
@@ -294,7 +294,12 @@ tr {
     margin-top: -5px;
     padding-top: 0px;
     vertical-align: top;
-    white-space:pre-wrap;  
+    white-space:pre-wrap;  */
+    float: left;
+    width: 96%;
+    padding-left: 1%;
+    white-space:normal;
+   
 }
 
 

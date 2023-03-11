@@ -16,11 +16,11 @@ class ChatGPT extends LitElement {
         prompt: {},
         chatList: [],
         arr:[],
-        responseData:{
-          hasChanged(newVal, oldVal) {
+        responseData:{ 
+          /*hasChanged(newVal, oldVal) {
             const hasChanged = newVal !== oldVal;            
             return hasChanged;
-          },
+          },*/
         },
         timeInterval: {},
         loading: { type: Boolean },
@@ -66,7 +66,9 @@ class ChatGPT extends LitElement {
         
     }
 
-    
+    get responseItem() {
+      return this.renderRoot?.querySelector('#response') ?? null;
+    }
 
       get input() {
         return this.renderRoot?.querySelector('#newitem') ?? null;
@@ -106,20 +108,24 @@ class ChatGPT extends LitElement {
 
     loader() {
       let textContent = "Hold on, we're waiting for the server to respond. This shouldn't take too long";
-      this.responseData = textContent;
+      //this.responseData = textContent;
+      this.responseItem.innerHTML = textContent;
       this.timeInterval = setInterval(() => {
           
           textContent += '.';        
           if (textContent === "Hold on, we're waiting for the server to respond. This shouldn't take too long......") {
               textContent = "Hold on, we're waiting for the server to respond. This shouldn't take too long";
           }
-          this.responseData = textContent;
-         
-      }, 300);
+          //this.responseData = textContent;
+          this.responseItem.innerHTML = textContent;
+      }, 20);
       
     }
 
    completion() {
+    //clearInterval(this.timeInterval)
+    
+    
     const self = this;
       var xhr = new XMLHttpRequest();
       xhr.open("POST", "https://api.openai.com/v1/chat/completions");
@@ -127,35 +133,54 @@ class ChatGPT extends LitElement {
       xhr.setRequestHeader("Content-Type", "application/json");
       xhr.setRequestHeader("Authorization", "Bearer " + this.apikey);
       let content = "";
-      
+      this.responseItem.innerHTML = ""
       xhr.onreadystatechange = function () {
+        
         if (xhr.readyState == 3) {
+          
           var newData = xhr.response.substr(xhr.seenBytes);
           
           const arr = newData.split("\n\n");
+          
           arr.pop();
             arr.forEach((data) => {
+              
               if (data.indexOf("[DONE]") === -1) { 
                 const currentData = data.trim().replace("data:","");  
                 if(currentData !== ""){          
                   const delta = JSON.parse(currentData).choices[0].delta;
                   content += delta.content ? delta.content : ""; 
-                  self.responseData = content
+                  //self.responseData = content
+                  self.responseItem.innerHTML = marked(content);
+                  self.scrollToBottom();
+                  //self.responseItem.innerHTML += delta.content ? marked(delta.content) : ""; 
+                  //setTimeout(() => {
+                    //self.responseItem.innerHTML += delta.content ? marked(delta.content) : ""; 
+                    //self.responseItem.innerHTML = marked(content); 
+                    //self.responseData = content
+                  //}, 100)
                   
                   
                 }
+                
               }
+
+                           
               
             })
           xhr.seenBytes = xhr.responseText.length;
+          
         }
 
         if (xhr.readyState == 4 && xhr.status === 200) {
-          self.responseData = "";
-          self.requestUpdate();
-          self.chatList.push({"role": "assistant", "content": content});
-          self.loading = false;
-          clearInterval(self.timeInterval)
+          //console.log("done2")
+            //self.responseData = "";
+            //self.requestUpdate()
+            self.responseItem.innerHTML = " ";           
+            self.chatList.push({"role": "assistant", "content": content});
+            self.loading = false;            
+            self.input.value = ""
+            self.scrollToBottom();
           
           
         }
@@ -254,13 +279,15 @@ class ChatGPT extends LitElement {
           return;
         }
         this.loading = true;
-        this.chatList.push({ "role": "user", "content": text});       
-        this.requestUpdate();
+        this.chatList.push({ "role": "user", "content": text});     
+        this.responseItem.innerHTML = "Hold on, we're waiting for the server to respond. This shouldn't take too long";  
         this.scrollToBottom();
+        this.requestUpdate();
+       
         const result =  await this.moderation();
         if(!result){
             //this.responseData = "Hold on, we're waiting for the server to respond. This shouldn't take too long.....";
-            this.loader()        
+            //this.loader()        
             this.completion() 
                     
         }        
@@ -317,6 +344,20 @@ class ChatGPT extends LitElement {
     });
     return content;
    }
+
+   renderMarkdown1(content) {
+    marked.setOptions({
+      highlight: function (code, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+          return hljs.highlight(lang, code).value;
+        } else {
+          return hljs.highlightAuto(code).value;
+        }
+      },
+    });
+  
+    return html`${marked(content)}`;
+  }
 
    renderMarkdown(content) {
     marked.setOptions({
@@ -425,7 +466,9 @@ class ChatGPT extends LitElement {
               ${this.chatList.map((item) => html`<span class="${item.role === 'user' ? 'userspan' : 'assistspan darkresult' }">
               ${this.renderMarkdown(item.content)}</span>`)}
                
-              <span class="responsespan darkresult">${this.renderMarkdown(this.responseData)}</span>
+              <span class="responsespan darkresult" id="response">
+              &nbsp;
+              </span>
              
            </div>
            <div class="sgptCommand ${this.loading ? 'overlay' : '' } ${this.showSettings ? 'hideSettings': 'showSettings'}">
