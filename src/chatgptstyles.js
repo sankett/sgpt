@@ -29,7 +29,7 @@ tbody {
     padding: 0.25rem 0.75rem;
     border-color: #011616;
     text-align: left;
-    border: 1px solid #011616;
+    border: 1px solid whitesmoke; /*#011616;*/
 }
 
  td {
@@ -37,7 +37,7 @@ tbody {
     border-left-width: 1px;
     padding: 0.25rem 0.75rem;
     text-align: left;
-    border: 1px solid #011616;
+    border: 1px solid whitesmoke; /*#011616;*/
 }
 
 tr {
@@ -251,6 +251,7 @@ tr {
     margin-top:2px;
     margin-left:2px;
     font-size:13px;
+    display:none;
 }
 .sgptButtonMargin {  
     margin-left: 1%;

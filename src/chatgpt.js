@@ -18,8 +18,7 @@ class ChatGPT extends LitElement {
         arr:[],
         responseData:{
           hasChanged(newVal, oldVal) {
-            const hasChanged = newVal !== oldVal;
-            //console.log(`${newVal}, ${oldVal}, ${hasChanged}`);
+            const hasChanged = newVal !== oldVal;            
             return hasChanged;
           },
         },
@@ -28,7 +27,11 @@ class ChatGPT extends LitElement {
         apikey: { type: String },
         openai: { type: Object },
         showSettings: { type: Boolean },
-        errorMessage: { type: String },
+        errorMessage: { 
+          hasChanged(newVal, oldVal) {
+            const hasChanged = newVal !== oldVal;            
+            return hasChanged;
+          } },
         speechRecognition: {},
         transcript: {}
 
@@ -39,7 +42,7 @@ class ChatGPT extends LitElement {
 
     constructor() {
         super();
-        this.prompt = 'Hello, how are you?';
+        this.prompt =  'Compare in table format for USA, India, China in terms of population, GDP, economy';
         this.chatList = [];
         this.arr = [];
         this.responseData = '';
@@ -113,8 +116,68 @@ class ChatGPT extends LitElement {
           this.responseData = textContent;
          
       }, 300);
+      
+    }
+
+   completion() {
+    const self = this;
+      var xhr = new XMLHttpRequest();
+      xhr.open("POST", "https://api.openai.com/v1/chat/completions");
+
+      xhr.setRequestHeader("Content-Type", "application/json");
+      xhr.setRequestHeader("Authorization", "Bearer " + this.apikey);
+      let content = "";
+      
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState == 3) {
+          var newData = xhr.response.substr(xhr.seenBytes);
+          
+          const arr = newData.split("\n\n");
+          arr.pop();
+            arr.forEach((data) => {
+              if (data.indexOf("[DONE]") === -1) { 
+                const currentData = data.trim().replace("data:","");  
+                if(currentData !== ""){          
+                  const delta = JSON.parse(currentData).choices[0].delta;
+                  content += delta.content ? delta.content : ""; 
+                  self.responseData = content
+                  
+                  
+                }
+              }
+              
+            })
+          xhr.seenBytes = xhr.responseText.length;
+        }
+
+        if (xhr.readyState == 4 && xhr.status === 200) {
+          self.responseData = "";
+          self.requestUpdate();
+          self.chatList.push({"role": "assistant", "content": content});
+          self.loading = false;
+          clearInterval(self.timeInterval)
+          
+          
+        }
+      }
+
+      let payload = {
+        "model": "gpt-3.5-turbo",
+        "messages": this.chatList,
+        "stream": true
+      };
+  
+      xhr.onerror = function () {
+        
+        this.errorMessage = "Something went wrong. Please try again.";
+        this.loading = false;
+      };
+
+      xhr.send(JSON.stringify(payload));
+
     }
     async completion1() {
+      let interval ;
       
       const response = await this.openai.createChatCompletion({
         model: 'gpt-3.5-turbo',
@@ -122,15 +185,18 @@ class ChatGPT extends LitElement {
         stream: true,
       });
          
-
+     
       const arr = response.data.split("\n\n");      
       let content = "";
+      
       arr.forEach((data) => {
+        
         if (data.indexOf("[DONE]") === -1) { 
           const currentData = data.trim().replace("data:","");          
           if(currentData !== ""){          
             const delta = JSON.parse(currentData).choices[0].delta;
-            content += delta.content ? delta.content : "";            
+            content += delta.content ? delta.content : ""; 
+           this.errorMessage = delta.content ? delta.content : "--";
           }
         }
         else{
@@ -140,9 +206,14 @@ class ChatGPT extends LitElement {
           console.log("its done",this.chatList)*/
           let index = 0
           let textAtIndex =  '';
-          
+          this.responseData = '';
+          this.requestUpdate();
+          this.chatList.push({"role": "assistant", "content": content});
           clearInterval(this.timeInterval);
-          let interval = setInterval(() => {
+          clearInterval(interval);
+          
+          this.loading = false;
+          /*let interval = setInterval(() => {
               if (index < content.length) {
                   textAtIndex += content.charAt(index)
                   this.responseData = textAtIndex
@@ -161,8 +232,9 @@ class ChatGPT extends LitElement {
                 this.requestUpdate();
                 clearInterval(interval)
               }
-          }, 5)
+          }, 5)*/
         }
+        
       });
   }
 
@@ -189,7 +261,7 @@ class ChatGPT extends LitElement {
         if(!result){
             //this.responseData = "Hold on, we're waiting for the server to respond. This shouldn't take too long.....";
             this.loader()        
-            this.completion1() 
+            this.completion() 
                     
         }        
     }
@@ -300,12 +372,15 @@ class ChatGPT extends LitElement {
         // get the latest result
         const result = event.results[event.results.length - 1];
         // get the transcript
-        this.transcript += result[0].transcript;
+       
         console.log(this.transcript)
-        this.prompt = this.transcript;              
+                   
         
-        
-        //this.requestUpdate();
+        this.prompt = result[0].transcript;
+        setTimeout(() => {
+          this.requestUpdate();
+        },50)
+       
       };
 
       
@@ -350,7 +425,7 @@ class ChatGPT extends LitElement {
               ${this.chatList.map((item) => html`<span class="${item.role === 'user' ? 'userspan' : 'assistspan darkresult' }">
               ${this.renderMarkdown(item.content)}</span>`)}
                
-              <span class="responsespan darkresult">${this.responseData}</span>
+              <span class="responsespan darkresult">${this.renderMarkdown(this.responseData)}</span>
              
            </div>
            <div class="sgptCommand ${this.loading ? 'overlay' : '' } ${this.showSettings ? 'hideSettings': 'showSettings'}">
