@@ -53,6 +53,39 @@ tr {
     font-size: 14px;
 }
 
+.divAction {
+    width: 99%;
+    float:left;
+    margin-top:1px;
+}
+
+.divActionLeft {
+    width: 90px;
+    float:left;
+    margin-top:3px;
+    text-align: right;
+    padding-left: 1%;
+    border:0px solid red;
+}
+
+.divActionCenter {
+    width: 38%;
+    float:left;
+    margin-top:3px;
+    color:orange;
+    padding-left: 5%;
+    border:0px solid red;
+}
+
+.divActionRight {
+    width: 110px;
+    float:right ;
+    margin-top:3px;
+    text-align: right;
+    
+    border:0px solid red;
+    padding-left:1%;
+}
 .sgptHeader {
     height: 32px;
     width: 100%;
@@ -151,13 +184,15 @@ tr {
 }
 .sgptTextPrompt {
     float: left;
-    width:78%;     
-    height: 90px;
+    width:97%;     
+    height: 60px;
     letter-spacing: normal;
     word-spacing: normal;    
     border-radius: 5px;      
     resize: none;  
-    margin: 2px;
+    margin-top: 2px;
+    margin-left:3px;
+    margin-right:3px;
 }
 
 .customButton {
@@ -196,16 +231,29 @@ tr {
 }
 .sgptButton {   
     float: left;
-    width: 15%;
+    width: 50px;
     height: 30px;
     border-radius: 5px;   
     border: 1px solid gray;
     cursor: pointer;   
-    
+    color:lightgreen;
 }
 
+.sgptVoiceButton {
+    float: left;
+    width: 40px;
+    height: 30px;
+    border-radius: 5px;   
+    border: 1px solid gray;
+    cursor: pointer;
+    margin-top: 0px;
+    color:lightgreen;
+    margin-top:2px;
+    margin-left:2px;
+    font-size:13px;
+}
 .sgptButtonMargin {  
-    margin-top: 1%;
+    margin-left: 1%;
 }
 
 .darkresult {

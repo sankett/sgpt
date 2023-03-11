@@ -28,7 +28,10 @@ class ChatGPT extends LitElement {
         apikey: { type: String },
         openai: { type: Object },
         showSettings: { type: Boolean },
-        errorMessage: { type: String }
+        errorMessage: { type: String },
+        speechRecognition: {},
+        transcript: {}
+
     };
 
     static styles = [chatgptStyles];
@@ -44,7 +47,7 @@ class ChatGPT extends LitElement {
         this.loading = false;
         this.apikey = localStorage.getItem('openai-apikey');
         this.errorMessage = "";
-        
+        this.transcript = "";
         if(this.apikey === null || this.apikey === undefined || this.apikey === ''){
           this.showSettings = true;
         }
@@ -55,6 +58,8 @@ class ChatGPT extends LitElement {
           });
           this.openai = new OpenAIApi(configuration)
         }
+
+        this.speechInit()
         
     }
 
@@ -255,7 +260,71 @@ class ChatGPT extends LitElement {
     return html`${unsafeHTML(marked(content))}`;
   }
 
-    render() {
+  speechInit(){
+    if ("webkitSpeechRecognition" in window) {
+      this.speechRecognition = new window.webkitSpeechRecognition();
+          
+      this.speechRecognition.continuous = true;
+      //this.speechRecognition.interimResults = true;
+      this.speechRecognition.lang = "en-US";
+
+      this.speechRecognition.onstart = () => {
+        //document.querySelector("#status").style.display = "block";
+        this.errorMessage  = "On start";
+        this.prompt = "";
+        this.transcript = "";
+        this.requestUpdate();
+      };
+      this.speechRecognition.onerror = () => {
+        //document.querySelector("#status").style.display = "none";
+        //console.log("Speech Recognition Error");
+        this.errorMessage  = "Speech Recognition Error";
+      };
+      this.speechRecognition.onend = () => {
+        //document.querySelector("#status").style.display = "none";
+        //console.log("Speech Recognition Ended");
+        
+        if(this.prompt.length >= 15) {
+          this.errorMessage  = "Speech Recognition Ended";
+          this.onSend()
+          this.prompt = "";
+          this.transcript ="";
+        }
+        else{
+          this.errorMessage = "Prompt should be greater than 15"
+        }
+       
+      };
+
+      this.speechRecognition.onresult = (event) => {
+        // get the latest result
+        const result = event.results[event.results.length - 1];
+        // get the transcript
+        this.transcript += result[0].transcript;
+        console.log(this.transcript)
+        this.prompt = this.transcript;              
+        
+        
+        //this.requestUpdate();
+      };
+
+      
+    }else {
+      console.log("Speech Recognition Not Available")
+    }
+  }
+
+  onStart() {
+    
+    this.speechRecognition.start();
+  }
+
+  onStop(){
+    this.speechRecognition.stop();
+    
+    
+  }
+  render() {
       
       
 
@@ -288,14 +357,21 @@ class ChatGPT extends LitElement {
               <textarea class="sgptTextPrompt darkTheme" @input=${this.changePrompt} 
               id="newitem"  placeholder="Enter Prompt.."
               value=${this.prompt}>${this.prompt}</textarea>
-                
-                <button class="sgptButton darkTheme" id="sgptButton" 
-                @click=${this.onSend}
-                name="sgptButton">Send</button><br>
-                <button class="sgptButton sgptButtonMargin darkTheme" id="sgptButton" @click=${this.onClear}>Clear</button><br>
+                <div class="divAction">
+                <span class="divActionLeft">
+                <button class="sgptVoiceButton darkTheme" id="sgptButton3" @click=${this.onStart}>S</button>
+                <button class="sgptVoiceButton darkTheme" id="sgptButton4" @click=${this.onStop}>E</button>
+              </span>
+                 
+                  <span class="divActionCenter">${this.errorMessage} </span>
+                  <span class="divActionRight">
+                    <button class="sgptButton  darkTheme" id="sgptButton1" @click=${this.onSend} name="sgptButton">Send</button>
+                    <button class="sgptButton sgptButtonMargin darkTheme" id="sgptButton2" @click=${this.onClear}>Clear</button>
+                  </span>
+                </div>
                 
            </div>
-           <span class="errorMessage">${this.errorMessage}</span>
+           
         </div>
       `;
     }
