@@ -268,8 +268,8 @@ class ChatGPT extends LitElement {
           return;
         }
 
-        if(text.length < 15){
-          this.errorMessage = "Please enter a valid and meaningful prompt with minimum sentence length of 15."
+        if(text.length < 6){
+          this.errorMessage = "Please enter a valid data more than 6 characters."
           return;
         }
         this.loading = true;
