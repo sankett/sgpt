@@ -6,6 +6,7 @@ pre {
     padding: 5px;
     background-color: rgb(1 39 39);
     color: lightgreen;
+    width:100%
 }
 table {
     border-collapse: collapse; 
@@ -13,7 +14,7 @@ table {
     text-indent: 0;
     background-color: rgb(1 39 39);
     color: lightgreen;
-    width: 98%;
+    width: 100%;
 }
 
 tbody {
@@ -89,8 +90,8 @@ tr {
 .sgptHeader {
     height: 32px;
     width: 100%;
-    border-top: 1px solid gray;
-    border-bottom: 1px solid gray;
+    border-top: 1px solid white;
+    border-bottom: 1px solid white;
 }
 
 .headerLeft{
@@ -114,7 +115,7 @@ tr {
     float: left;
     text-align: right;
     padding-top: 8px;
-    margin-top: -10px;
+    margin-top: -6px;
     
 }
 
@@ -274,20 +275,21 @@ tr {
     padding-left: 1%;
     padding-right: 1%;
     /*padding-top: 10px;*/
-    font-size:14px;
+    font-size:16px;
     white-space: normal;
+    word-spacing: 1px;
 }
 
 .assistspan{
     float: left;
     width: 98%;
     text-align: left;
-    font-size:14px;
+    font-size:16px;
     white-space: normal;
     padding-left: 1%;
     padding-right: 1%;
     border-bottom: 1px dotted white;
-    
+    word-spacing: 1px;
 }
 
 .responsespan{
@@ -305,7 +307,7 @@ tr {
     width: 96%;
     padding-left: 1%;
     white-space:normal;
-   
+    font-size:16px;
 }
 
 

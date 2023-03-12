@@ -447,7 +447,9 @@ class ChatGPT extends LitElement {
               <span class="headerLeft">ChatGPT Turbo</span>
               <span class="headerMiddle"><button class="customButton darkTheme" id="sgptButton" @click=${this.onSetting}>Settings</button></span>
               <span class="headerRight">
-              <img src="https://storybook7.blob.core.windows.net/images/sanketterdal.png" alt="Sanket" width="120" height="32"/>&nbsp;
+              <img src="https://storybook7.blob.core.windows.net/images/sanketterdal.png" alt="Sanket" 
+              
+              width="120" height="28"/>&nbsp;
               </span>
             </div>
            <div class="sgptSettings ${this.showSettings ? 'showSettings': 'hideSettings'}">
