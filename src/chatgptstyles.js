@@ -90,8 +90,8 @@ tr {
 .sgptHeader {
     height: 32px;
     width: 100%;
-    border-top: 1px solid white;
-    border-bottom: 1px solid white;
+    border-top: 0px solid white;
+    border-bottom: 0px solid white;
 }
 
 .headerLeft{
@@ -274,10 +274,12 @@ tr {
     /*padding-bottom: 10px;*/
     padding-left: 1%;
     padding-right: 1%;
-    /*padding-top: 10px;*/
+    padding-top: -11px;
     font-size:16px;
+    font-weight:100;
     white-space: normal;
-    word-spacing: 1px;
+    background-color:#026081;
+    
 }
 
 .assistspan{
