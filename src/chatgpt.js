@@ -102,7 +102,7 @@ class ChatGPT extends LitElement {
     var payload = {
       input: this.prompt,
     }  
-    var res = await  this.fetchData('http://localhost:4000/api/moderation',payload);
+    var res = await  this.fetchData('https://sanketgpt.onrender.com/api/moderation',payload);
     const responseData = await res.json();
     var result = { message: "", code: -1};
     if(responseData.error === undefined){
@@ -135,7 +135,7 @@ completion() {
       
       const self = this;
       var xhr = new XMLHttpRequest();
-      xhr.open("POST", "http://localhost:4000/api/chat");
+      xhr.open("POST", "https://sanketgpt.onrender.com/api/chat");
       xhr.setRequestHeader("Content-Type", "application/json");
       let content = "";
       xhr.onreadystatechange = function () {
@@ -376,7 +376,7 @@ completion() {
               <button class="customActionButton darkTheme"  @click=${this.onCancel}>Cancel</button><br>
              
            </div>
-           <div class="sgptSettings">
+           <div class="sgptSettings hideSettings">
            <a href="https://platform.openai.com/account/api-keys"  class="sgptLink"            
            target="_blank">Get OpenAI Key</a>
           </div>
