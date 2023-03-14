@@ -61,6 +61,7 @@ class ChatGPT extends LitElement {
           });
           this.openai = new OpenAIApi(configuration)
         }
+        this.showSettings = false;
 
         this.speechInit()
         
@@ -74,7 +75,8 @@ class ChatGPT extends LitElement {
         return this.renderRoot?.querySelector('#newitem') ?? null;
       }
 
-    changePrompt(event) {    
+    changePrompt(event) {          
+      
       this.responseData = '' ;  
         this.prompt = event.target.value;
         this.errorMessage = event.target.value.length + " characters.";
@@ -96,26 +98,23 @@ class ChatGPT extends LitElement {
     element.scrollTop = element.scrollHeight;    
    }
 
-    async moderation() {
-      var payload = {
-        input: this.prompt,
-      }  
-      var result = await  this.fetchData('https://api.openai.com/v1/moderations',payload);
-      var data = await result.json();
-      
-      var result = { message: "", code: -1};
-      if(data.error === undefined){
-        result.code = 0
-      }
-      else{
-        result.code = 1;
-        result.message = data.error.message ? data.error.message : "Something went wrong. Please try again";
-
-      }
-      return result;
-      
+   async moderation() {
+    var payload = {
+      input: this.prompt,
+    }  
+    var res = await  this.fetchData('http://localhost:4000/api/moderation',payload);
+    const responseData = await res.json();
+    var result = { message: "", code: -1};
+    if(responseData.error === undefined){
+      result.code = 0
     }
-
+    else{
+      result.code = 1;
+      result.message = responseData.error.message ? responseData.error.message : "Something went wrong. Please try again";
+    }
+    return result;
+   }
+    
     loader() {
       let textContent = "Hold on, we're waiting for the server to respond. This shouldn't take too long";
       //this.responseData = textContent;
@@ -132,132 +131,47 @@ class ChatGPT extends LitElement {
       
     }
 
-   completion() {
-    //clearInterval(this.timeInterval)
-    
-    
-    const self = this;
+completion() {
+      
+      const self = this;
       var xhr = new XMLHttpRequest();
-      xhr.open("POST", "https://api.openai.com/v1/chat/completions");
-
+      xhr.open("POST", "http://localhost:4000/api/chat");
       xhr.setRequestHeader("Content-Type", "application/json");
-      xhr.setRequestHeader("Authorization", "Bearer " + this.apikey);
       let content = "";
-      this.responseItem.innerHTML = ""
       xhr.onreadystatechange = function () {
         
-        if (xhr.readyState == 3) {
-          try {
-            var newData = xhr.response.substr(xhr.seenBytes);          
-            const arr = newData.split("\n\n");          
-            arr.pop();
-              arr.forEach((data) => {              
-                if (data.indexOf("[DONE]") === -1) { 
-                  const currentData = data.trim().replace("data:","");  
-                  if(currentData !== ""){          
-                    const delta = JSON.parse(currentData).choices[0].delta;
-                    content += delta.content ? delta.content : "";                     
-                    self.responseItem.innerHTML = marked(content);
-                    self.scrollToBottom();
-                  }                
-                }                                        
-              })
-            xhr.seenBytes = xhr.responseText.length;
-          }catch (err) {
-            
-              this.errorMessage = "Something went wrong. Please try again.<br>Reason: " + err.message;
-              this.loading = false;
-          }
+        if (xhr.readyState === 3) {
+          console.log("datetime", new Date().toLocaleString());
+          const newData = xhr.response.substr(xhr.seenBytes);             
+          content =  newData;       
+             
+            self.responseItem.innerHTML = marked(content);
+             self.scrollToBottom();
+          
+          
         }
 
-        if (xhr.readyState == 4 && xhr.status === 200) {   
+        if (xhr.readyState === 4 && xhr.status === 200) {   
+          console.log("datetime", new Date().toLocaleString());
+          setTimeout(() => {
             self.scrollToBottom();      
             self.responseItem.innerHTML = " ";           
             self.chatList.push({"role": "assistant", "content": content});
             self.loading = false;            
             self.input.value = ""
-            
+          }, 20);
+          
+          
         }
       }
-
       let payload = {
-        "model": "gpt-3.5-turbo",
-        "messages": this.chatList,
-        "stream": true
-      };
-  
-      xhr.onerror = function () {
-        
-        this.errorMessage = "Something went wrong. Please try again.";
-        this.loading = false;
+        chatList: this.chatList
       };
 
+      console.log("datetime", new Date().toLocaleString());
       xhr.send(JSON.stringify(payload));
-
     }
-    async completion1() {
-      let interval ;
-      
-      const response = await this.openai.createChatCompletion({
-        model: 'gpt-3.5-turbo',
-        messages: this.chatList,
-        stream: true,
-      });
-         
-     
-      const arr = response.data.split("\n\n");      
-      let content = "";
-      
-      arr.forEach((data) => {
-        
-        if (data.indexOf("[DONE]") === -1) { 
-          const currentData = data.trim().replace("data:","");          
-          if(currentData !== ""){          
-            const delta = JSON.parse(currentData).choices[0].delta;
-            content += delta.content ? delta.content : ""; 
-           this.errorMessage = delta.content ? delta.content : "--";
-          }
-        }
-        else{
-          
-          /*this.chatList.push({"role": "assistant", "content": content});
-          this.requestUpdate();
-          console.log("its done",this.chatList)*/
-          let index = 0
-          let textAtIndex =  '';
-          this.responseData = '';
-          this.requestUpdate();
-          this.chatList.push({"role": "assistant", "content": content});
-          clearInterval(this.timeInterval);
-          clearInterval(interval);
-          
-          this.loading = false;
-          /*let interval = setInterval(() => {
-              if (index < content.length) {
-                  textAtIndex += content.charAt(index)
-                  this.responseData = textAtIndex
-                  this.scrollToBottom();   
-                  index++
-              } else {
-                this.responseData = '';
-               
-                this.chatList.push({"role": "assistant", "content": content});
-                this.loading = false;
-                this.input.value = '';
-                //this.input.focus();
-                this.prompt = "";
-                this.scrollToBottom();           
-                
-                this.requestUpdate();
-                clearInterval(interval)
-              }
-          }, 5)*/
-        }
-        
-      });
-  }
-
-   
+  
 
     async onSend(event)   {        
         this.responseData = "";
@@ -452,7 +366,7 @@ class ChatGPT extends LitElement {
               width="120" height="28"/>&nbsp;
               </span>
             </div>
-           <div class="sgptSettings ${this.showSettings ? 'showSettings': 'hideSettings'}">
+           <div class="sgptSettings hideSettings">
            
               <input type="text" class="sgptKeyText darkTheme" id="apikey" placeholder="Enter API Key" 
               @input=${this.changeKey}
@@ -462,7 +376,7 @@ class ChatGPT extends LitElement {
               <button class="customActionButton darkTheme"  @click=${this.onCancel}>Cancel</button><br>
              
            </div>
-           <div class="sgptSettings ${this.showSettings ? 'showSettings': 'hideSettings'}">
+           <div class="sgptSettings">
            <a href="https://platform.openai.com/account/api-keys"  class="sgptLink"            
            target="_blank">Get OpenAI Key</a>
           </div>

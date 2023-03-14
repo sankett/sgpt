@@ -15,6 +15,7 @@ table {
     background-color: rgb(1 39 39);
     color: lightgreen;
     width: 100%;
+    
 }
 
 tbody {
@@ -95,23 +96,24 @@ tr {
 }
 
 .headerLeft{
-    width:40%;
+    width:42%;
     float: left;
     text-align: left;
     padding-left: 1%;
-    padding-top: 8px;
-    font-size: 16px;
+    padding-top: 10px;
+    font-size: 20px;
     color:yellow;
     font-weight:bold;
+    
 }
 
 .headerMiddle {
     float:left;
     width:15%;
-    margin-top: 1px;
+    margin-top: 4px;
 }
 .headerRight{
-    width:44%;
+    width:42%;
     float: left;
     text-align: right;
     padding-top: 8px;
@@ -206,6 +208,7 @@ tr {
     margin-top: 0px;
     color:lightgreen;
     font-size:13px;
+    display:none;
 }
 
 .customActionButton {
@@ -265,21 +268,31 @@ tr {
     color:yellow;
 }
 .darkresult {
-    color:yellow;
+    color:lightgreen;
 }
+
+p {
+    display: inline;
+    
+}
+
+
 .userspan{
     float: left;
-    width: 98%;
-    text-align: left;
-    /*padding-bottom: 10px;*/
-    padding-left: 1%;
-    padding-right: 1%;
-    padding-top: -11px;
+    width: 97%;
+    text-align: left;   
+    padding-left: 2%;
+    padding-right: 1%;    
     font-size:16px;
     font-weight:100;
     white-space: normal;
     background-color:#026081;
-    
+    line-height: 1.2em;
+    border-radius: 10px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-bottom: 7px;
+    margin-top: 5px;
 }
 
 .assistspan{
@@ -290,26 +303,19 @@ tr {
     white-space: normal;
     padding-left: 1%;
     padding-right: 1%;
-    border-bottom: 1px dotted white;
-    word-spacing: 1px;
+    border-bottom: 0px dotted white;
+    word-spacing: normal;
+    line-height: 1.2em;
 }
 
 .responsespan{
-    /*float: left;
-    width: 98%;
-    text-align: left;
-    padding-bottom: 3%;
-    padding-left: 1%;
-    padding-right: 1%;
-    margin-top: -5px;
-    padding-top: 0px;
-    vertical-align: top;
-    white-space:pre-wrap;  */
+    
     float: left;
     width: 96%;
     padding-left: 1%;
     white-space:normal;
     font-size:16px;
+    line-height: 1.2em;
 }
 
 
