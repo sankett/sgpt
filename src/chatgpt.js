@@ -210,7 +210,7 @@ completion() {
     }
 
     onClear(event) {
-        this.chatList = [];
+      this.chatList = [{ "role": "user", "content": '[textarea]'}];
         this.responseData = '';
         this.input.value = '';
         this.prompt = "";
