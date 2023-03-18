@@ -58,20 +58,20 @@ tr {
 .divAction {
     width: 99%;
     float:left;
-    margin-top:1px;
+    margin-top:2px;
 }
 
 .divActionLeft {
-    width: 90px;
+    width: 55%;
     float:left;
     margin-top:3px;
-    text-align: right;
+    text-align: left;
     padding-left: 1%;
     border:0px solid red;
 }
 
 .divActionCenter {
-    width: 38%;
+    width: 90px;
     float:left;
     margin-top:3px;
     color:orange;
@@ -165,7 +165,7 @@ tr {
 }
 
 .sgptResult{
-    height: 74%;
+    height: 93%;
     width: 100%;        
     border-radius: 5px;     
     border:0px solid gray;
@@ -185,17 +185,24 @@ tr {
 .hideSettings{
     display: none;
 }
+
+
+
 .sgptTextPrompt {
+    display:block;
     float: left;
-    width:97%;     
-    height: 60px;
+    width:97%;    
+    height:50px; 
+    max-height: 200px;
     letter-spacing: normal;
     word-spacing: normal;    
     border-radius: 5px;      
-    resize: none;  
-    margin-top: 2px;
-    margin-left:3px;
+    resize: vertical;  
+    margin-top: 2%;
+    margin-left:1%;
     margin-right:3px;
+   overflow-y: auto;
+   line-height: 1.2em;
 }
 
 .customButton {
@@ -281,7 +288,7 @@ p {
     float: left;
     width: 97%;
     text-align: left;   
-    padding-left: 2%;
+    padding-left: 1%;
     padding-right: 1%;    
     font-size:16px;
     font-weight:100;

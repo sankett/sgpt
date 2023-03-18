@@ -42,8 +42,8 @@ class ChatGPT extends LitElement {
 
     constructor() {
         super();
-        this.prompt =  'Compare in table format for USA, India, China in terms of population, GDP, economy';
-        this.chatList = [];
+        this.prompt =  'Hi, how are you';//'Compare in table format for USA, India, China in terms of population, GDP, economy';
+        this.chatList = [{ "role": "user", "content": '[textarea]'}];
         this.arr = [];
         this.responseData = '';
         this.timeInterval = null;
@@ -80,6 +80,8 @@ class ChatGPT extends LitElement {
       this.responseData = '' ;  
         this.prompt = event.target.value;
         this.errorMessage = event.target.value.length + " characters.";
+       const height  = this.input.scrollHeight > 200 ? this.input.scrollHeight - 50: this.input.scrollHeight;
+        this.input.style.height = height + "px";
     }
 
     async fetchData(url,payload) {
@@ -94,8 +96,10 @@ class ChatGPT extends LitElement {
     }
 
    scrollToBottom() {
+    
     const element = this.renderRoot?.querySelector('#sgptResult');                
-    element.scrollTop = element.scrollHeight;    
+    element.scrollTop = element.scrollHeight -500 ;    
+   
    }
 
    async moderation() {
@@ -152,13 +156,13 @@ completion() {
         }
 
         if (xhr.readyState === 4 && xhr.status === 200) {   
-          console.log("datetime", new Date().toLocaleString());
+         
           setTimeout(() => {
             self.scrollToBottom();      
             self.responseItem.innerHTML = " ";           
-            self.chatList.push({"role": "assistant", "content": content});
+            self.chatList.push({"role": "assistant", "content": content} , {"role": "user", "content": "[textarea]"});
             self.loading = false;            
-            self.input.value = ""
+            self.prompt = "" 
           }, 20);
           
           
@@ -187,7 +191,8 @@ completion() {
           return;
         }
         this.loading = true;
-        this.chatList.push({ "role": "user", "content": text});     
+        //this.chatList.push({ "role": "user", "content": text});     
+        this.chatList = this.chatList.map((element,index) => index === this.chatList.length - 1  ? {...element, content : text} : element);
         this.responseItem.innerHTML = "Hold on, we're waiting for the server to respond. This shouldn't take too long";  
         this.scrollToBottom();
         this.requestUpdate();
@@ -380,33 +385,37 @@ completion() {
            <a href="https://platform.openai.com/account/api-keys"  class="sgptLink"            
            target="_blank">Get OpenAI Key</a>
           </div>
-           <div class="sgptResult ${this.showSettings ? 'hideSettings': 'showSettings'}" id="sgptResult">
-              ${this.chatList.map((item) => html`<span class="${item.role === 'user' ? 'userspan' : 'assistspan darkresult' }">
-              ${this.renderMarkdown(item.content)}</span>`)}
-               
+           <div class="sgptResult ${this.showSettings ? 'hideSettings': 'showSettings'}" id="sgptResult">           
+              ${this.chatList.map((item) => 
+                item.role === 'user'  && item.content === '[textarea]'? 
+                html`<div>
+                <textarea class="sgptTextPrompt darkTheme" @input=${this.changePrompt} 
+                    id="newitem"  placeholder="Enter Prompt.."
+                    value=${this.prompt} >${this.prompt}</textarea>
+                  <div class="divAction">
+                    <span class="divActionLeft">
+                    ${this.errorMessage}
+                    </span>
+                    
+                            <span class="divActionRight">
+                              <button class="sgptButton  darkTheme" id="sgptButton1" @click=${this.onSend} name="sgptButton">Send</button>
+                              <button class="sgptButton sgptButtonMargin darkTheme" id="sgptButton2" @click=${this.onClear}>Clear</button>
+                            </span>
+                  </div>
+                <div>
+                ` :
+                item.role === 'user'  && item.content !== '[textarea]'? 
+                html`<span class='userspan'>${this.renderMarkdown(item.content)}</span>`
+                :  
+                html`<span class='assistspan darkresult'>${this.renderMarkdown(item.content)}</span>`
+              )}
+              
               <span class="responsespan darkresult" id="response">
               &nbsp;
               </span>
              
            </div>
-           <div class="sgptCommand ${this.loading ? 'overlay' : '' } ${this.showSettings ? 'hideSettings': 'showSettings'}">
-              <textarea class="sgptTextPrompt darkTheme" @input=${this.changePrompt} 
-              id="newitem"  placeholder="Enter Prompt.."
-              value=${this.prompt}>${this.prompt}</textarea>
-                <div class="divAction">
-                <span class="divActionLeft">
-                <button class="sgptVoiceButton darkTheme" id="sgptButton3" @click=${this.onStart}>S</button>
-                <button class="sgptVoiceButton darkTheme" id="sgptButton4" @click=${this.onStop}>E</button>
-              </span>
-                 
-                  <span class="divActionCenter">${this.errorMessage} </span>
-                  <span class="divActionRight">
-                    <button class="sgptButton  darkTheme" id="sgptButton1" @click=${this.onSend} name="sgptButton">Send</button>
-                    <button class="sgptButton sgptButtonMargin darkTheme" id="sgptButton2" @click=${this.onClear}>Clear</button>
-                  </span>
-                </div>
-                
-           </div>
+           
            
         </div>
       `;
